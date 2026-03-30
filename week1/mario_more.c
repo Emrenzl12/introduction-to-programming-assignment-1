@@ -26,23 +26,36 @@ int main(void)
     do
     {
         // TODO: Prompt for height
+        height = get_int("Height: ");
 
     }
-    while (/* TODO: invalid condition */ false);
+    while (height < 1 || height > 8);
 
     // TODO: Print each row of the double pyramid
     for (int row = 1; row <= height; row++)
     {
         // TODO: Print (height - row) leading spaces
+        for (int i = 0; i < height - row; i++)
+        {
+             printf(" ");
+        }
 
 
         // TODO: Print (row) hashes — LEFT side
+        for (int i = 0; i < row; i++)
+{
+    printf("#");
+}
 
 
         // The gap between the two pyramids is always exactly two spaces.
         printf("  ");
 
         // TODO: Print (row) hashes — RIGHT side (mirror of left, no leading spaces)
+        for (int i = 0; i < row; i++)
+{
+    printf("#");
+}
 
 
         printf("\n");

@@ -28,17 +28,26 @@ int main(void)
     do
     {
         // TODO: Get an integer from the user with prompt "Height: "
+        height = get_int("Height: ");
 
     }
-    while (/* TODO: condition to keep looping */ false);
+    while (height < 1 || height > 8);
 
     // TODO: Use a for loop to iterate over each row (1 through height).
     for (int row = 1; row <= height; row++)
     {
         // TODO: Print (height - row) spaces using a for loop.
+        for (int i = 0; i < height - row; i++)
+         {
+             printf(" ");
+         }
 
 
         // TODO: Print (row) hashes using a for loop.
+        for (int i = 0; i < row; i++)
+            {
+                printf("#");
+            }
 
 
         // Print a newline to end the row.

@@ -2,12 +2,12 @@
 // CS50x - Week 1, Problem Set 1
 //
 // Exercise: Hello, It's Me
-// --------------------------
+// -------------------------
 // Prompt the user for their name, then greet them.
 //
 // Expected output:
-//   What is your name? Alice
-//   hello, Alice
+// What is your name? Alice
+// hello, Alice
 //
 // How to compile:  make hello
 // How to run:      ./hello
@@ -19,9 +19,9 @@
 int main(void)
 {
     // TODO: Prompt the user for their name using get_string()
-string name = get_string("What is your name? ");
+    string name = get_string("What is your name? ");
+
     printf("hello, %s\n", name);
 
     // TODO: Print "hello, " followed by their name using printf()
-
 }

@@ -37,7 +37,7 @@ int main(void)
         // TODO: Print (height - row) leading spaces
         for (int i = 0; i < height - row; i++)
         {
-             printf(" ");
+             printf("  ");
         }
 
 

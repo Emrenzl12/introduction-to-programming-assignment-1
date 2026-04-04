@@ -1,111 +1,114 @@
-// caesar.c
-// CS50x - Week 2, Problem Set 2
+// credit.c
+// CS50x - Week 1, Problem Set 1
 //
-// Exercise: Caesar Cipher
-// ------------------------
-// Encrypt a message by rotating each letter forward in the alphabet
-// by a numeric key given as a command-line argument.
+// Exercise: Credit Card Validator
+// ------------------------------------------
+// Validate a credit card number using Luhn's Algorithm,
+// then identify whether it is AMEX, MASTERCARD, VISA, or INVALID.
 //
-//   Example (key = 3):  A→D, B→E, Z→C (wraps around)
-//   "hello" → "khoor"
-//
-// Usage:
-//   ./caesar KEY       (KEY must be a non-negative integer)
-//   ./caesar           → prints usage error
-//   ./caesar abc       → prints usage error
-//
-// How to compile:  make caesar
-// How to run:      ./caesar 13
-// How to check:    check50 cs50/problems/2024/x/caesar
+// How to compile:  make credit
+// How to run:      ./credit
+// How to check:    check50 cs50/problems/2024/x/credit
 
 #include <cs50.h>
-#include <ctype.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
-// Function prototypes
-bool only_digits(string s);
-char rotate(char c, int n);
+// Luhn's Algorithm (overview)
+// ------------------------------------------------------------
+// 1. Starting from the SECOND-TO-LAST digit, multiply every other digit by 2.
+// 2. If any product >= 10, add its digits together.
+// 3. Sum all doubled digits -> sum_doubled
+// 4. Sum all other digits -> sum_rest
+// 5. If (sum_doubled + sum_rest) % 10 == 0 => VALID
 
-int main(int argc, string argv[])
+int main(void)
 {
-    // ---------------------------------------------------------------------------
-    // STEP 1: Validate command-line arguments
-    // ---------------------------------------------------------------------------
-    // The program must be called with exactly one argument: ./caesar KEY
-    // If argc != 2, OR if the key is not all digits, print the usage message
-    // and return 1 (indicating an error).
-    //
-    // TODO: Check that argc == 2
-    // TODO: Check that argv[1] contains only digit characters using only_digits()
-    // If either check fails:
-    //   printf("Usage: ./caesar key\n");
-    //   return 1;
+    // TODO: Prompt user for a credit card number using get_long()
+    long number = get_long("Number: ");
 
+    // ------------------------------------------------------------
+    // STEP 1: Count the number of digits
+    // ------------------------------------------------------------
+    int length = 0;
+    long temp = number;
 
-    // ---------------------------------------------------------------------------
-    // STEP 2: Convert the key from string to int
-    // ---------------------------------------------------------------------------
-    // TODO: Use atoi() to convert argv[1] to an integer.
-    //   int key = atoi(argv[1]);
+    while (temp > 0)
+    {
+        temp /= 10;
+        length++;
+    }
 
+    // ------------------------------------------------------------
+    // STEP 2: Apply Luhn's Algorithm
+    // ------------------------------------------------------------
+    int sum_doubled = 0;
+    int sum_rest = 0;
 
-    // ---------------------------------------------------------------------------
-    // STEP 3: Get the plaintext from the user
-    // ---------------------------------------------------------------------------
-    // TODO: Use get_string() to prompt for plaintext.
-    //   string plaintext = get_string("plaintext:  ");
+    int position = 0;
+    temp = number;
 
+    while (temp > 0)
+    {
+        int digit = temp % 10;
 
-    // ---------------------------------------------------------------------------
-    // STEP 4: Encrypt and print the ciphertext
-    // ---------------------------------------------------------------------------
-    // TODO: Loop through each character of plaintext.
-    //       Call rotate(c, key) for each character to get the encrypted version.
-    //       Print each encrypted character WITHOUT a newline inside the loop.
-    //
-    // After the loop, print a newline:
-    //   printf("\n");
-    //
-    // The output should start with "ciphertext: " (with a trailing space):
-    //   printf("ciphertext: ");
+        if (position % 2 == 1)
+        {
+            int doubled = digit * 2;
+            if (doubled >= 10)
+            {
+                sum_doubled += (doubled / 10) + (doubled % 10);
+            }
+            else
+            {
+                sum_doubled += doubled;
+            }
+        }
+        else
+        {
+            sum_rest += digit;
+        }
 
-}
+        temp /= 10;
+        position++;
+    }
 
-// ---------------------------------------------------------------------------
-// TODO: Implement only_digits
-// ---------------------------------------------------------------------------
-// Return true if every character in s is a digit (0-9), false otherwise.
-// Hint: use isdigit() from <ctype.h>
-// ---------------------------------------------------------------------------
-bool only_digits(string s)
-{
-    // TODO: Loop through each character of s
-    // TODO: If any character is NOT a digit, return false
-    // TODO: If all characters are digits, return true
+    // ------------------------------------------------------------
+    // STEP 3: Check validity
+    // ------------------------------------------------------------
+    if ((sum_doubled + sum_rest) % 10 != 0)
+    {
+        printf("INVALID\n");
+        return 0;
+    }
 
-    return true; // placeholder — replace this
-}
+    // ------------------------------------------------------------
+    // STEP 4: Identify card type
+    // ------------------------------------------------------------
+    long first_two = number;
+    while (first_two >= 100)
+    {
+        first_two /= 10;
+    }
 
-// ---------------------------------------------------------------------------
-// TODO: Implement rotate
-// ---------------------------------------------------------------------------
-// Rotate character c forward by n positions in the alphabet.
-// Preserve case: uppercase stays uppercase, lowercase stays lowercase.
-// Non-letter characters are returned UNCHANGED.
-//
-// The math (for uppercase):
-//   char encrypted = (c - 'A' + n) % 26 + 'A';
-//
-// The math (for lowercase):
-//   char encrypted = (c - 'a' + n) % 26 + 'a';
-// ---------------------------------------------------------------------------
-char rotate(char c, int n)
-{
-    // TODO: If c is uppercase, rotate it and return the result
-    // TODO: If c is lowercase, rotate it and return the result
-    // TODO: If c is not a letter, return c unchanged
+    int first_digit = first_two / 10;
 
-    return c; // placeholder — replace this
+    // AMEX
+    if (length == 15 && (first_two == 34 || first_two == 37))
+    {
+        printf("AMEX\n");
+    }
+    // MASTERCARD
+    else if (length == 16 && (first_two >= 51 && first_two <= 55))
+    {
+        printf("MASTERCARD\n");
+    }
+    // VISA
+    else if ((length == 13 || length == 16) && first_digit == 4)
+    {
+        printf("VISA\n");
+    }
+    else
+    {
+        printf("INVALID\n");
+    }
 }
